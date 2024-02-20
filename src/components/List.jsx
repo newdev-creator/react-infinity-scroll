@@ -1,8 +1,15 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+
+import usePhotos from "../hooks/usePhotos";
 import spinner from "../assets/spinner.svg";
 
 export default function List() {
+  const [query, setQuery] = useState("random");
+  const [pageNumber, setPAgeNumber] = useState(1);
+  const photoApiData = usePhotos(query, pageNumber);
+
+  console.log(photoApiData);
   return (
     <>
       <h1 className="text-4xl">Unsplash Clone.</h1>
