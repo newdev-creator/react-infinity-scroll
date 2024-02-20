@@ -17,7 +17,11 @@ export default function usePhotos(querySearch, pageIndex) {
       }`
     )
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        setPhotos(data.results);
+        setMaxPages(data.total_pages);
+        setLoading(false);
+      });
   }, [querySearch, pageIndex]);
 
   return { error, photos, maxPages, loading };

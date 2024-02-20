@@ -23,6 +23,24 @@ export default function List() {
           type="text"
         />
       </form>
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] auto-rows-[175px] gap-4 justify-center">
+        {!photoApiData.loader &&
+          photoApiData.photos.length !== 0 &&
+          photoApiData.photos.map((photo, index) => (
+            <li key={photo.id}>
+              <img
+                className="w-full h-full object-cover"
+                src={photo.urls.regular}
+                alt={photo.alt_description}
+              />
+            </li>
+          ))}
+      </ul>
+
+      {/* Loader */}
+      {photoApiData.lodaing && !photoApiData.error.data && (
+        <img className="block mx-auto" src={spinner} />
+      )}
     </>
   );
 }
