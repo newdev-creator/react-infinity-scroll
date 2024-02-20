@@ -11,6 +11,13 @@ export default function usePhotos(querySearch, pageIndex) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (photos.length !== 0 && maxPages !== 0) {
+      setPhotos([]);
+      setMaxPages(0);
+    }
+  }, [querySearch]);
+
+  useEffect(() => {
     setLoading(true);
 
     fetch(
