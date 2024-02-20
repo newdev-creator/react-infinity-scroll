@@ -11,6 +11,8 @@ export default function usePhotos(querySearch, pageIndex) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+
     fetch(
       `https://api.unsplash.com/search/photos?page=${pageIndex}&per_page=30&query=${querySearch}&client_id=${
         import.meta.env.VITE_UNSPLASH_KEY
@@ -18,7 +20,7 @@ export default function usePhotos(querySearch, pageIndex) {
     )
       .then((response) => response.json())
       .then((data) => {
-        setPhotos(data.results);
+        setPhotos((state) => [...state, ...data.results]);
         setMaxPages(data.total_pages);
         setLoading(false);
       });

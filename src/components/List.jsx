@@ -6,10 +6,26 @@ import spinner from "../assets/spinner.svg";
 
 export default function List() {
   const [query, setQuery] = useState("random");
-  const [pageNumber, setPAgeNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
+  const lastPicRef = useRef();
   const photoApiData = usePhotos(query, pageNumber);
 
   console.log(photoApiData);
+
+  useEffect(() => {
+    if (lastPicRef.current) {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && photoApiData.maxPages !== pageNumber) {
+          setPageNumber(pageNumber + 1);
+          lastPicRef.current = null;
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(lastPicRef.current);
+    }
+  }, [photoApiData]);
+
   return (
     <>
       <h1 className="text-4xl">Unsplash Clone.</h1>
@@ -26,15 +42,29 @@ export default function List() {
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] auto-rows-[175px] gap-4 justify-center">
         {!photoApiData.loader &&
           photoApiData.photos.length !== 0 &&
-          photoApiData.photos.map((photo, index) => (
-            <li key={photo.id}>
-              <img
-                className="w-full h-full object-cover"
-                src={photo.urls.regular}
-                alt={photo.alt_description}
-              />
-            </li>
-          ))}
+          photoApiData.photos.map((photo, index) => {
+            if (photoApiData.photos.length === index + 1) {
+              return (
+                <li ref={lastPicRef} key={photo.id}>
+                  <img
+                    className="w-full h-full object-cover border-4 border-red-500"
+                    src={photo.urls.regular}
+                    alt={photo.alt_description}
+                  />
+                </li>
+              );
+            } else {
+              return (
+                <li key={photo.id}>
+                  <img
+                    className="w-full h-full object-cover"
+                    src={photo.urls.regular}
+                    alt={photo.alt_description}
+                  />
+                </li>
+              );
+            }
+          })}
       </ul>
 
       {/* Loader */}
